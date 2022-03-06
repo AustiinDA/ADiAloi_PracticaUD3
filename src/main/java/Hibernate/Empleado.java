@@ -7,11 +7,8 @@ import java.sql.Date;
 public class Empleado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
-    private byte id;
-    @Basic
     @Column(name = "id_emp")
-    private Short idEmp;
+    private short idEmp;
     @Basic
     @Column(name = "apellido")
     private String apellido;
@@ -31,19 +28,11 @@ public class Empleado {
     @Column(name = "id_dep")
     private Byte idDep;
 
-    public byte getId() {
-        return id;
-    }
-
-    public void setId(byte id) {
-        this.id = id;
-    }
-
-    public Short getIdEmp() {
+    public short getIdEmp() {
         return idEmp;
     }
 
-    public void setIdEmp(Short idEmp) {
+    public void setIdEmp(short idEmp) {
         this.idEmp = idEmp;
     }
 

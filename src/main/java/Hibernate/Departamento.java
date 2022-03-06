@@ -6,11 +6,8 @@ import javax.persistence.*;
 public class Departamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
-    private byte id;
-    @Basic
     @Column(name = "id_dep")
-    private Byte idDep;
+    private byte idDep;
     @Basic
     @Column(name = "nombre")
     private String nombre;
@@ -18,19 +15,11 @@ public class Departamento {
     @Column(name = "localidad")
     private String localidad;
 
-    public byte getId() {
-        return id;
-    }
-
-    public void setId(byte id) {
-        this.id = id;
-    }
-
-    public Byte getIdDep() {
+    public byte getIdDep() {
         return idDep;
     }
 
-    public void setIdDep(Byte idDep) {
+    public void setIdDep(byte idDep) {
         this.idDep = idDep;
     }
 

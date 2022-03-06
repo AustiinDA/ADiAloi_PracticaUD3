@@ -12,10 +12,10 @@
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.hbm2ddl.auto">update</property>
 
-    <mapping class="Hibernate.Cliente"></mapping>
-    <mapping class="Hibernate.Departamento"></mapping>
-    <mapping class="Hibernate.Empleado"></mapping>
-    <mapping class="Hibernate.Producto"></mapping>
-    <mapping class="Hibernate.Venta"></mapping>
+    <mapping class="Cliente"></mapping>
+    <mapping class="Departamento"></mapping>
+    <mapping class="Empleado"></mapping>
+    <mapping class="Producto"></mapping>
+    <mapping class="Venta"></mapping>
   </session-factory>
 </hibernate-configuration>

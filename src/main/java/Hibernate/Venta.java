@@ -7,8 +7,8 @@ import java.sql.Date;
 public class Venta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
-    private int id;
+    @Column(name = "id_venta")
+    private int idVenta;
     @Basic
     @Column(name = "fecha")
     private Date fecha;
@@ -22,12 +22,12 @@ public class Venta {
     @Column(name = "id_producto")
     private int idProducto;
 
-    public int getId() {
-        return id;
+    public int getIdVenta() {
+        return idVenta;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdVenta(int idVenta) {
+        this.idVenta = idVenta;
     }
 
     public Date getFecha() {
