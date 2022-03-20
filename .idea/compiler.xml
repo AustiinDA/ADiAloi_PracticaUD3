@@ -6,11 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ADiAloi_PracticaUD3" />
+        <module name="Personal" />
+        <module name="Ventas" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="ADiAloi_PracticaUD3" target="1.8" />
+      <module name="Personal" target="11" />
+      <module name="PracticaUD3_Ventas" target="11" />
+      <module name="untitled" target="11" />
+      <module name="Ventas" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

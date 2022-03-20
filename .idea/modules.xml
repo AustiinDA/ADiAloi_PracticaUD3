@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ADiAloi_PracticaUD3.iml" filepath="$PROJECT_DIR$/ADiAloi_PracticaUD3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Personal/Personal.iml" filepath="$PROJECT_DIR$/Personal/Personal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Ventas/Ventas.iml" filepath="$PROJECT_DIR$/Ventas/Ventas.iml" />
     </modules>
   </component>
 </project>
