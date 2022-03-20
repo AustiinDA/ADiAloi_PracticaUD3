@@ -6,20 +6,22 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-import javax.persistence.OneToMany;
+
 import java.sql.Date;
 import java.util.List;
 
 public class Consultas {
     public static void main(String[] args) {
-        modificarDep("hola", "adios");
-        insertarEmp("Quichu", "Transporte", 1300, 3);
-        leerEmpleadoYDep();
+        //modificarDep("hola", "adios");
+        //insertarEmp("Quichu", "Transporte", 1300, 3);
+        //leerEmpleadoYDep();
         //eliminarEmpleado();
+        //listadoEmpleadosConSalarioM1000();
+        //listadoEmpleadoEnDepartamentos();
+        listadoEmpleado2015();
     }
 
     //Modificación de departamento
@@ -175,32 +177,68 @@ public class Consultas {
 
     }
 
-    //Obtener un listado de los empleados que tienen un salario superior a 1000
+    //Obtener un listado de los empleados que tienen un salario superior a 1000 - No funciona ya que da un error que no puedo identificar
     public static void listadoEmpleadosConSalarioM1000() {
         Configuration cfg = new Configuration().configure();
         SessionFactory sessionFactory = cfg.buildSessionFactory();
-        Session sesion = sessionFactory.openSession();
-        try {
+        try (Session sesion = sessionFactory.openSession()) {
             // Consulta
 
-            Query consulta = sesion.createQuery("SELECT emp.apellido, emp.salario FROM Empleado emp WHERE salario>=1000");
+            Query query = sesion.createQuery("SELECT emp.apellido, emp.salario FROM Empleado emp WHERE salario>=1000");
+            List<Empleado> lista = query.list();
 
-            final List<Empleado> listaEmpleados = consulta.list();
-            for (Empleado emp: listaEmpleados) {
-                System.out.println("Empleado :" + emp + "Apellido: " +emp.getApellido()
-                        + ", Salario: " + emp.getSalario());
+            for (Empleado emp : lista) {
+                System.out.println("Apellido: " + emp.getApellido() + ", Salario: " + emp.getSalario());
             }
-
             sesion.close();
 
             System.out.println("Sesión realizada, datos de empleado actualizados");
         } catch (HibernateException e) {
             System.err.println("Error al comenzar transacción: " + e);
-        } finally {
-            // finalizar la sesión
-            sesion.close();
         }
+        // finalizar la sesión
     }
 
+    //Obtener un listado de los empleados que pertenezcan a los departamentos 10, 20, 30,40, 50, 60 y 70. Utiliza una lista de parámetros en la consulta.
+    public static void listadoEmpleadoEnDepartamentos() {
+        Configuration cfg = new Configuration().configure();
+        SessionFactory sessionFactory = cfg.buildSessionFactory();
+        try (Session sesion = sessionFactory.openSession()) {
+            // Consulta
 
+            Query query = sesion.createQuery("SELECT emp.apellido, emp.idDep FROM Empleado emp WHERE idDep=10 or  idDep=20 or  idDep=30 or  idDep=40 or  idDep=50 or idDep=60 or idDep=70");
+            List<Empleado> lista = query.list();
+
+            for (Empleado emp : lista) {
+                System.out.println("Apellido: " + emp.getApellido() + ", ID Departamento: " + emp.getIdDep());
+            }
+            sesion.close();
+
+            System.out.println("Sesión realizada, datos de empleado actualizados");
+        } catch (HibernateException e) {
+            System.err.println("Error al comenzar transacción: " + e);
+        }
+        // finalizar la sesión
+    }
+
+    //Obtener un listado de los empleados nuevos del año 2015. (OPCIONAL)
+    public static void listadoEmpleado2015() {
+        Configuration cfg = new Configuration().configure();
+        SessionFactory sessionFactory = cfg.buildSessionFactory();
+        try (Session sesion = sessionFactory.openSession()) {
+            // Consulta
+            Query query = sesion.createQuery("SELECT emp.apellido, emp.fechaAlta FROM Empleado emp WHERE fechaAlta BETWEEN 2015-01-01 AND 2015-12-31");
+            List<Empleado> lista = query.list();
+
+            for (Empleado emp : lista) {
+                System.out.println("Apellido: " + emp.getApellido() + ", Fecha: " + emp.getFechaAlta());
+            }
+            sesion.close();
+
+            System.out.println("Sesión realizada, datos de empleado actualizados");
+        } catch (HibernateException e) {
+            System.err.println("Error al comenzar transacción: " + e);
+        }
+        // finalizar la sesión
+    }
 }
