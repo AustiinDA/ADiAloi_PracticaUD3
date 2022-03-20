@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DdlMappings">
-    <mapping uuid="73c593a2-6be0-49b1-a1a7-fba8888e146a" name="hibernate.cfg.xml/Hibernate Mapping">
-      <data-sources db="dca73298-193c-43b1-9d01-7761f98de30d" ddl="65645048-af49-4c3c-8464-e79e567826b3" />
+    <mapping uuid="d9c53f1d-4f6d-43e9-9f1b-1203efbc0364" name="MariaDB - personal@localhost Mapping">
+      <data-sources db="8df6bd88-d2d7-4399-9551-be80bfe52c94" ddl="e1d17214-696c-4a9d-b2e8-8bc26600c408" />
       <scope>
         <node kind="schema" qname="personal" />
       </scope>
