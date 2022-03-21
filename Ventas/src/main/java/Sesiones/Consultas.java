@@ -8,13 +8,23 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
+import java.sql.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class Consultas {
     public static void main(String[] args) {
-        insertarCliente(5, 5, "Nails Crane", "Calle Salamandra 42", "Seattle", "982321237", "81223452B");
+  /*      insertarCliente(5, 5, "Nails Crane", "Calle Salamandra 42", "Seattle", "982321237", "81223452B");
         insertarProducto(6, 6, "Amplificador/Dac Fiio", 400, 100, 199);
         insertarVenta(5, 5, 120);
-        leerVenta();
+        leerVenta();*/
+        //productosMenoresA100();
+        // listaProdStockIgualAMin();
+        listaClientesZaragoza();
+        //listaClientesRNombre();
+        listaVentasAnterioresA30Dias();
     }
 
 
@@ -187,4 +197,118 @@ public class Consultas {
             sesion.close();
         }
     }
+
+    //Obtener un listado de los productos que tienen un precio inferior a 100.
+    public static void productosMenoresA100() {
+        SessionFactory sessionFactory = SessionFactoryUtil.getSessionFactory();
+
+        Session sesion = sessionFactory.openSession();
+
+        Query consulta = sesion.createQuery("SELECT prod.descripcion, prod.precio FROM Producto prod WHERE precio<100");
+        List<Producto> listaProd = consulta.list();
+
+        System.out.println("Productos con precios menores a 100 => ");
+        for (Producto prod : listaProd) {
+            System.out.println("Descripcion: " + prod.getDescripcion() + ", PVP: " + prod.getPrecio());
+        }
+        sessionFactory.close();
+    }
+
+    //Obtener un listado de los productos cuyo stock actual sea igual a su stock mínimo
+    public static void listaProdStockIgualAMin() {
+        SessionFactory sessionFactory = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sessionFactory.openSession();
+
+        Query query = sesion.createQuery("SELECT prod.descripcion, prod.stockactual FROM Producto prod WHERE stockactual=stockminimo");
+        List<Producto> listaProd = query.list();
+
+        System.out.print("Productos con stock igual al stock mínimo =>");
+        for (Producto prod : listaProd) {
+            System.out.println("Descripcion: " + prod.getDescripcion() + ", StockActual: " + prod.getStockactual());
+        }
+        sesion.close();
+    }
+
+    //Obtener un listado de los clientes que viven en Zaragoza.
+    public static void listaClientesZaragoza() {
+        SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sesionFac.openSession();
+
+        Query query = sesion.createQuery("SELECT nombre, poblacion FROM Cliente WHERE poblacion='Zaragoza'");
+        List<Cliente> listaClientes = query.list();
+
+        Iterator<Cliente> iterator = listaClientes.iterator();
+        Cliente client = new Cliente();
+        System.out.print("Listado de clientes de Zaragoza =>");
+        while (iterator.hasNext()) {
+            client = iterator.next();
+            System.out.println("Nombre: " + client.getNombre() + ", Poblacion: " + client.getPoblacion());
+        }
+        sesion.close();
+    }
+
+    //Obtener un listado de los clientes cuyo nombre empieza por la letra R.
+    public static void listaClientesRNombre() {
+        SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sesionFac.openSession();
+
+        Query query = sesion.createQuery("SELECT nombre, poblacion FROM Cliente c WHERE nombre LIKE 'r' or nombre LIKE 'R'");
+        List<Cliente> listaClientes = query.list();
+
+        Iterator<Cliente> iterator = listaClientes.iterator();
+        Cliente client;
+        System.out.print("Listado de clientes cuyo nombre empieza por R =>");
+        while (iterator.hasNext()) {
+            client = iterator.next();
+            System.out.println("Nombre: " + client.getNombre());
+        }
+        sesion.close();
+    }
+
+   //Obtener un listado de las ventas realizadas en los últimos 30 días.
+   public static void listaVentasAnterioresA30Dias() {
+       SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+       Session sesion = sesionFac.openSession();
+
+
+       String str1 = "2021-12-05";
+       String str2 = "2022-01-05";
+       Date date1 = Date.valueOf(str1);
+       Date date2 = Date.valueOf(str2);
+
+       Query query = sesion.createQuery("SELECT idVenta, fecha FROM Venta v WHERE fecha BETWEEN :date1 AND :date2");
+       query.setParameter("date1",date1);
+       query.setParameter("date2",date2);
+
+       List<Venta> listaVentas = query.list();
+
+       Iterator<Venta> iterator = listaVentas.iterator();
+       Venta venta;
+       System.out.print("Listado de ventas hechas hace 30 dias =>");
+       while (iterator.hasNext()) {
+           venta = iterator.next();
+           System.out.println("Nombre: " + venta.getIdVenta() + ", Poblacion: " + venta.getFecha());
+       }
+       sesion.close();
+   }
+
+   //Obtener un listado, ordenado por id de cliente, de las ventas realizadas de un producto determinado.
+   public static void listaProductoDeterminada() {
+       SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+       Session sesion = sesionFac.openSession();
+
+       Query query = sesion.createQuery("SELECT idVenta, idCliente  FROM Venta v WHERE idProducto = '2' ORDER BY idCliente.idCliente");
+
+       List<Venta> listaVentas = query.list();
+
+       Iterator<Venta> iterator = listaVentas.iterator();
+       Venta venta;
+       System.out.print("Listado ordenado por id de cliente de las ventas realizadas de un producto determinado =>");
+       while (iterator.hasNext()) {
+           venta = iterator.next();
+           System.out.println("Nombre: " + venta.getIdVenta() + ", Id Clinete: " + venta.getIdCliente());
+       }
+       sesion.close();
+   }
+
 }

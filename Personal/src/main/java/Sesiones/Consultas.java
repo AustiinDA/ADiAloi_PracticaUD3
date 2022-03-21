@@ -10,8 +10,11 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
 
+import javax.persistence.Parameter;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Consultas {
     public static void main(String[] args) {
@@ -21,7 +24,7 @@ public class Consultas {
         //eliminarEmpleado();
         //listadoEmpleadosConSalarioM1000();
         //listadoEmpleadoEnDepartamentos();
-        listadoEmpleado2015();
+        //listadoEmpleado2015();
     }
 
     //Modificación de departamento
@@ -223,11 +226,21 @@ public class Consultas {
 
     //Obtener un listado de los empleados nuevos del año 2015. (OPCIONAL)
     public static void listadoEmpleado2015() {
-        Configuration cfg = new Configuration().configure();
-        SessionFactory sessionFactory = cfg.buildSessionFactory();
+
+        SessionFactory sessionFactory = SessionFactoryUtil.getSessionFactory();
+
         try (Session sesion = sessionFactory.openSession()) {
             // Consulta
-            Query query = sesion.createQuery("SELECT emp.apellido, emp.fechaAlta FROM Empleado emp WHERE fechaAlta BETWEEN 2015-01-01 AND 2015-12-31");
+            Map<String, Object> parameterNameAndValues = new HashMap<>();
+            String str1 = "2015-01-01";
+            String str2 = "2015-12-31";
+            Date date1 = Date.valueOf(str1);
+            Date date2 = Date.valueOf(str2);
+
+
+            Query query = sesion.createQuery("SELECT emp.apellido, emp.fechaAlta FROM Empleado emp WHERE fechaAlta BETWEEN :date1 AND :date2");
+            query.setParameter("date1",date1);
+            query.setParameter("date2",date2);
             List<Empleado> lista = query.list();
 
             for (Empleado emp : lista) {
