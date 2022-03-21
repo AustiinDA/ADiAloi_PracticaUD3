@@ -16,15 +16,19 @@ import java.util.List;
 
 public class Consultas {
     public static void main(String[] args) {
-  /*      insertarCliente(5, 5, "Nails Crane", "Calle Salamandra 42", "Seattle", "982321237", "81223452B");
+        insertarCliente(5, 5, "Nails Crane", "Calle Salamandra 42", "Seattle", "982321237", "81223452B");
         insertarProducto(6, 6, "Amplificador/Dac Fiio", 400, 100, 199);
         insertarVenta(5, 5, 120);
-        leerVenta();*/
-        //productosMenoresA100();
-        // listaProdStockIgualAMin();
+        leerVenta();
+        //Las consultas de abajo dan un error que no puedo identificar
+        productosMenoresA100();
+        listaProdStockIgualAMin();
         listaClientesZaragoza();
-        //listaClientesRNombre();
+        listaClientesRNombre();
         listaVentasAnterioresA30Dias();
+        listaProductoDeterminada();
+        actualizadoDeIVA();
+        eliminarVentaPorCliente20();
     }
 
 
@@ -265,50 +269,108 @@ public class Consultas {
         sesion.close();
     }
 
-   //Obtener un listado de las ventas realizadas en los últimos 30 días.
-   public static void listaVentasAnterioresA30Dias() {
-       SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
-       Session sesion = sesionFac.openSession();
+    //Obtener un listado de las ventas realizadas en los últimos 30 días.
+    public static void listaVentasAnterioresA30Dias() {
+        SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sesionFac.openSession();
 
 
-       String str1 = "2021-12-05";
-       String str2 = "2022-01-05";
-       Date date1 = Date.valueOf(str1);
-       Date date2 = Date.valueOf(str2);
+        String str1 = "2021-12-05";
+        String str2 = "2022-01-05";
+        Date date1 = Date.valueOf(str1);
+        Date date2 = Date.valueOf(str2);
 
-       Query query = sesion.createQuery("SELECT idVenta, fecha FROM Venta v WHERE fecha BETWEEN :date1 AND :date2");
-       query.setParameter("date1",date1);
-       query.setParameter("date2",date2);
+        Query query = sesion.createQuery("SELECT idVenta, fecha FROM Venta v WHERE fecha BETWEEN :date1 AND :date2");
+        query.setParameter("date1", date1);
+        query.setParameter("date2", date2);
 
-       List<Venta> listaVentas = query.list();
+        List<Venta> listaVentas = query.list();
 
-       Iterator<Venta> iterator = listaVentas.iterator();
-       Venta venta;
-       System.out.print("Listado de ventas hechas hace 30 dias =>");
-       while (iterator.hasNext()) {
-           venta = iterator.next();
-           System.out.println("Nombre: " + venta.getIdVenta() + ", Poblacion: " + venta.getFecha());
-       }
-       sesion.close();
-   }
+        Iterator<Venta> iterator = listaVentas.iterator();
+        Venta venta;
+        System.out.print("Listado de ventas hechas hace 30 dias =>");
+        while (iterator.hasNext()) {
+            venta = iterator.next();
+            System.out.println("Nombre: " + venta.getIdVenta() + ", Poblacion: " + venta.getFecha());
+        }
+        sesion.close();
+    }
 
-   //Obtener un listado, ordenado por id de cliente, de las ventas realizadas de un producto determinado.
-   public static void listaProductoDeterminada() {
-       SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
-       Session sesion = sesionFac.openSession();
+    //Obtener un listado, ordenado por id de cliente, de las ventas realizadas de un producto determinado.
+    public static void listaProductoDeterminada() {
+        SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sesionFac.openSession();
 
-       Query query = sesion.createQuery("SELECT idVenta, idCliente  FROM Venta v WHERE idProducto = '2' ORDER BY idCliente.idCliente");
+        Query query = sesion.createQuery("SELECT idVenta, idCliente  FROM Venta v WHERE idProducto = '2' ORDER BY idCliente.id");
 
-       List<Venta> listaVentas = query.list();
+        List<Venta> listaVentas = query.list();
 
-       Iterator<Venta> iterator = listaVentas.iterator();
-       Venta venta;
-       System.out.print("Listado ordenado por id de cliente de las ventas realizadas de un producto determinado =>");
-       while (iterator.hasNext()) {
-           venta = iterator.next();
-           System.out.println("Nombre: " + venta.getIdVenta() + ", Id Clinete: " + venta.getIdCliente());
-       }
-       sesion.close();
-   }
+        Iterator<Venta> iterator = listaVentas.iterator();
+        Venta venta;
+        System.out.print("Listado ordenado por id de cliente de las ventas realizadas de un producto determinado =>");
+        while (iterator.hasNext()) {
+            venta = iterator.next();
+            System.out.println("Nombre: " + venta.getIdVenta() + ", Id Clinete: " + venta.getIdCliente());
+        }
+        sesion.close();
+    }
+
+    //Modificar el precio de todos los productos de forma que incluyan un IVA del 21%.
+    public static void actualizadoDeIVA() {
+        SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sesionFac.openSession();
+        try {
+            // comenzar la transacción
+            Transaction tx = sesion.beginTransaction();
+            // instancia de cliente
+
+            String consulta = "UPDATE Producto p SET p.precio = p.precio * 1.21";
+
+            Query query = sesion.createNativeQuery(consulta);
+
+            int updatedQuery = query.executeUpdate();
+            System.out.println("Consulta y modificación de entidades realizadas => ");
+            System.out.print(updatedQuery);
+
+            tx.commit();
+
+        } catch (HibernateException e) {
+            System.err.println("Error al comenzar transacción: " + e);
+        } finally {
+            // finalizar la sesión
+            sesion.close();
+        }
+
+    }
+
+    //Eliminar las ventas realizadas por el cliente 20.
+    public static void eliminarVentaPorCliente20() {
+        SessionFactory sesionFac = SessionFactoryUtil.getSessionFactory();
+        Session sesion = sesionFac.openSession();
+        try {
+            // comenzar la transacción
+            Transaction tx = sesion.beginTransaction();
+            // instancia de cliente
+
+            String consulta = "DELETE FROM Venta v WHERE v.idCliente='2'";
+
+            Query query = sesion.createNativeQuery(consulta);
+
+
+            int updatedQuery = query.executeUpdate();
+            System.out.println("Consulta y modificación de entidades realizadas => ");
+            System.out.print(updatedQuery);
+
+            tx.commit();
+
+        } catch (HibernateException e) {
+            System.err.println("Error al comenzar transacción: " + e);
+        } finally {
+            // finalizar la sesión
+            sesion.close();
+        }
+
+    }
+
 
 }

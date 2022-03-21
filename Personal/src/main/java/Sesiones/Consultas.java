@@ -18,13 +18,13 @@ import java.util.Map;
 
 public class Consultas {
     public static void main(String[] args) {
-        //modificarDep("hola", "adios");
-        //insertarEmp("Quichu", "Transporte", 1300, 3);
-        //leerEmpleadoYDep();
-        //eliminarEmpleado();
-        //listadoEmpleadosConSalarioM1000();
-        //listadoEmpleadoEnDepartamentos();
-        //listadoEmpleado2015();
+        modificarDep("hola", "adios");
+        insertarEmp("Quichu", "Transporte", 1300, 3);
+        leerEmpleadoYDep();
+        eliminarEmpleado();
+        listadoEmpleadosConSalarioM1000();
+        listadoEmpleadoEnDepartamentos();
+        listadoEmpleado2015();
     }
 
     //Modificación de departamento
